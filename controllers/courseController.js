@@ -1,5 +1,5 @@
 const {Course} = require('../models')
-
+const departments = ['computer science', 'solving equations', 'science', 'language arts', 'learning the past', 'foreign language arts'].sort();
 
 module.exports.viewAll = async function(req,res){
     const courses = await Course.findAll();
@@ -10,4 +10,43 @@ module.exports.viewAll = async function(req,res){
 module.exports.viewProfile= async function(req,res){
     const course = await Course.findByPk(req.params.id);
     res.render('course/profile', {course});
+}
+
+module.exports.renderEditForm = async function(req,res){
+    const course = await Course.findByPk(req.params.id);
+    res.render('course/edit', {course, departments});
+}
+
+module.exports.renderAddForm = function(req, res){
+    const course = {
+        name: '',
+        department: departments[0],
+        instructor_name: '',
+        description:''
+    }
+    res.render('course/add', {course, departments});
+}
+
+module.exports.updateCourse = async function(req, res){
+    const course = await Course.update({
+        name: req.body.name,
+        department: req.body.department,
+        instructor_name: req.body.instructor_name,
+        description: req.body.description
+        }, {
+        where: {
+            id: req.params.id
+        }
+        });
+    res.redirect(`/courses/profile/${req.params.id}`);
+}
+
+module.exports.addCourse = async function(req, res){
+    const course = await Course.create( {
+        name: req.body.name,
+        department: req.body.department,
+        instructor_name: req.body.instructor_name,
+        description: req.body.description
+    });
+    res.redirect(`/course/profile/${course/id}`);
 }
