@@ -50,3 +50,12 @@ module.exports.addCourse = async function(req, res){
     });
     res.redirect(`/course/profile/${course/id}`);
 }
+
+module.exports.deleteCourse = async function(req, res){
+    await Course.destroy( {
+        where: {
+            id:req.params.id
+        }
+        });
+    res.redirect('/courses');
+}
