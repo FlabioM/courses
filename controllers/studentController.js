@@ -1,4 +1,4 @@
-const {Student, Course, studentCourses} = require('../models')
+const {Student, Course, StudentCourses} = require('../models')
 
 module.exports.viewAll = async function(req, res){
     const students = await Student.findAll();
@@ -74,6 +74,12 @@ module.exports.enrollStudent = async function (req, res){
 
 }
 
-function studentHasCourse(student, course){
-
+module.exports.removeCourse = async function(req, res){
+    await StudentCourses.destroy({
+        where: {
+            student_id: req.params.studentId,
+            course_id: req.params.courseId
+        }
+    });
+    res.redirect(`/students/profile/${req.params.studentId}`)
 }
